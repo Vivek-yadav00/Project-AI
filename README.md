@@ -9,9 +9,9 @@ AI-powered voice assistant for feature phones.
 ## Tech Stack
 - **Backend Framework**: FastAPI
 - **Database**: SQLite with SQLAlchemy ORM
-- **LLM Integration**: OpenAI / Gemini
+- **LLM Integration**: Google Gemini
 - **TTS**: ElevenLabs
-- **STT**: OpenAI Whisper
+- **STT**: Google Gemini (multimodal audio)
 
 ## Setup Instructions
 

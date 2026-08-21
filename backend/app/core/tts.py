@@ -1,7 +1,6 @@
 import logging
 from app.config import get_settings
 from elevenlabs.client import AsyncElevenLabs
-from elevenlabs import Voice, VoiceSettings
 import base64
 import json
 import urllib.request
@@ -34,12 +33,13 @@ async def text_to_speech(text: str, language: str = "hi", voice_id: str = None, 
 
 async def _elevenlabs_tts(text: str, voice_id: str, settings) -> bytes:
     client = AsyncElevenLabs(api_key=settings.elevenlabs_api_key)
-    vid = voice_id or "EXAVITQu4vr4xnSDxMaL" # Default voice
+    vid = voice_id or "JBFqnCBsd6RMkjVDRZzb"  # Default voice
     
-    audio_stream = await client.generate(
+    audio_stream = await client.text_to_speech.convert(
+        voice_id=vid,
         text=text,
-        voice=Voice(voice_id=vid, settings=VoiceSettings(stability=0.71, similarity_boost=0.5, style=0.0, use_speaker_boost=True)),
-        model="eleven_multilingual_v2"
+        model_id="eleven_multilingual_v2",
+        output_format="mp3_44100_128",
     )
     
     audio_bytes = b""
