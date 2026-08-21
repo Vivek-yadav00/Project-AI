@@ -11,7 +11,7 @@ AI-powered voice assistant for feature phones.
 - **Database**: SQLite with SQLAlchemy ORM
 - **LLM Integration**: OpenAI / Gemini
 - **TTS**: ElevenLabs
-- **Others**: Redis, Celery
+- **STT**: OpenAI Whisper
 
 ## Setup Instructions
 
