@@ -16,7 +16,7 @@ async def speech_to_text(audio_data: bytes, language: str = "hi", provider: str 
         
     try:
         genai.configure(api_key=settings.google_api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-3.5-flash')
         
         # Upload audio file to Gemini
         audio_file = genai.upload_file(temp_path)

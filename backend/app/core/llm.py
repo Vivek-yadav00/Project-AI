@@ -25,7 +25,7 @@ async def get_ai_response(prompt: str, conversation_history: list[dict], provide
 async def _get_gemini_response(messages: list[dict], settings) -> str:
     """Generate response using Google Gemini API."""
     genai.configure(api_key=settings.google_api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-3.5-flash')
     
     # Convert message format for Gemini
     gemini_messages = []
