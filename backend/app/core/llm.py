@@ -8,11 +8,15 @@ SYSTEM_PROMPT = """You are DadaAI (also known as VaaniAI), a friendly, patient, 
 Keep your responses concise as they will be delivered via SMS or voice.
 Respond in the user's preferred language."""
 
-async def get_ai_response(prompt: str, conversation_history: list[dict], provider: str = None, language: str = "hi") -> str:
+async def get_ai_response(prompt: str, conversation_history: list[dict], provider: str = None, language: str = "hi", context: str = None) -> str:
     """Get AI response using Google Gemini."""
     settings = get_settings()
     
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    system_prompt_text = SYSTEM_PROMPT
+    if context:
+        system_prompt_text += f"\n\n{context}"
+        
+    messages = [{"role": "system", "content": system_prompt_text}]
     messages.extend(conversation_history)
     messages.append({"role": "user", "content": prompt})
 
