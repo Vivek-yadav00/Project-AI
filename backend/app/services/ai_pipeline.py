@@ -49,9 +49,11 @@ async def process_voice(phone_number: str, audio_data: bytes, language: str, db:
     if sms_conv:
         recent_sms = crud.get_conversation_history(db, conversation_id=sms_conv.id, limit=3)
         if recent_sms:
-            sms_context = "Recent SMS interaction:\n"
+            sms_context = "CONTEXT FOR YOU: Here are the most recent SMS messages Dada Ji just received on his phone:\n"
             for msg in reversed(recent_sms):
-                sms_context += f"- {msg.role}: {msg.content}\n"
+                sender_label = "Received SMS (Caregiver/Sender)" if msg.role == MessageRole.USER else "Your AI Translation (What you told Dada Ji)"
+                sms_context += f"- [{sender_label}]: {msg.content}\n"
+            sms_context += "\nIf Dada Ji asks a question, he is likely asking about the 'Received SMS' above. Answer his question using the information from the SMS."
                 
     conversation = crud.get_active_conversation(db, user_id=user.id, channel=ChannelType.VOICE)
     if not conversation:
