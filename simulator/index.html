@@ -3,20 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DadaAI — Integrated Web Simulator</title>
+    <title>DadaAI — Control Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* ───────── Global ───────── */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
-        :root {
-            --nokia-body: #2c2c34;
-            --nokia-btn: #3a3a44;
-            --nokia-btn-hover: #4a4a54;
-            --lcd-bg: #b8c99a;
-            --lcd-text: #2a3b1a;
-            --lcd-glow: rgba(184,201,154,0.35);
-        }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -25,11 +16,7 @@
             color: #e2e8f0;
             overflow-x: hidden;
         }
-
-        /* ───────── Animated background particles ───────── */
-        .bg-particles {
-            position: fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
-        }
+        .bg-particles { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
         .bg-particles span {
             position:absolute; display:block; width:6px; height:6px;
             background:rgba(139,92,246,0.25); border-radius:50%;
@@ -40,149 +27,11 @@
             10%  { opacity:1; }
             100% { transform:translateY(-10vh) scale(1.2); opacity:0; }
         }
-
-        /* ───────── Header ───────── */
         .header {
             background: rgba(15,12,41,0.85);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(139,92,246,0.2);
         }
-
-        /* ───────── Phone Casings ───────── */
-        /* 4G Smartphone */
-        .smartphone {
-            width: 280px;
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border-radius: 32px;
-            padding: 12px;
-            box-shadow: 0 0 40px rgba(59,130,246,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
-            border: 1px solid rgba(59,130,246,0.15);
-            position: relative;
-        }
-        .smartphone-screen {
-            background: #0d1117;
-            border-radius: 24px;
-            overflow: hidden;
-            min-height: 480px;
-            display: flex; flex-direction: column;
-        }
-        .smartphone .notch {
-            width: 80px; height: 22px;
-            background: #1a1a2e;
-            border-radius: 0 0 14px 14px;
-            margin: 0 auto;
-            position: relative; z-index:2;
-        }
-        .smartphone .notch::after {
-            content:''; width:8px; height:8px; border-radius:50%;
-            background:#2d2d3d; position:absolute; top:6px; left:50%;
-            transform:translateX(-50%);
-        }
-
-        /* 2G Feature Phone */
-        .feature-phone {
-            width: 240px;
-            background: linear-gradient(160deg, #3c3c4c, var(--nokia-body), #22222a);
-            border-radius: 22px 22px 28px 28px;
-            padding: 18px 14px 14px;
-            box-shadow: 0 0 40px rgba(168,85,247,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
-            border: 1px solid rgba(168,85,247,0.15);
-            position:relative;
-        }
-        .feature-phone::before {
-            content: 'DadaAI'; position:absolute; top:6px; left:50%;
-            transform:translateX(-50%); font-size:8px; font-weight:700;
-            letter-spacing:2px; color:rgba(168,85,247,0.5); text-transform:uppercase;
-        }
-
-        /* LCD Screen */
-        .lcd-screen {
-            background: var(--lcd-bg);
-            border-radius: 6px;
-            min-height: 160px;
-            padding: 8px 10px;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--lcd-text);
-            font-size: 11px;
-            line-height: 1.4;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.25), 0 0 15px var(--lcd-glow);
-            position:relative;
-            overflow: hidden;
-        }
-        .lcd-screen .lcd-header {
-            display: flex; justify-content:space-between; align-items:center;
-            font-size:9px; margin-bottom:4px;
-            border-bottom: 1px solid rgba(42,59,26,0.3);
-            padding-bottom:3px;
-        }
-
-        /* Keypad */
-        .keypad { margin-top:10px; }
-        .keypad-row { display:flex; justify-content:center; gap:6px; margin-bottom:6px; }
-        .key {
-            width:56px; height:36px;
-            background: linear-gradient(180deg, #4a4a58, var(--nokia-btn));
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 6px;
-            color: #d4d4dc;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            transition: all 0.1s;
-            user-select: none;
-            font-family: 'Inter', sans-serif;
-        }
-        .key:active, .key.pressed {
-            background: linear-gradient(180deg, var(--nokia-btn), #2a2a34);
-            transform: scale(0.95);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-        }
-        .key .sub { font-size:6px; color:#8888a0; letter-spacing:1px; margin-top:-1px; }
-        .key-nav {
-            width: 40px; height: 32px;
-            background: linear-gradient(180deg, #555568, #44445a);
-            border-radius: 5px; font-size:11px;
-        }
-        .key-call { background: linear-gradient(180deg, #22c55e, #16a34a) !important; color:#fff !important; }
-        .key-end  { background: linear-gradient(180deg, #ef4444, #dc2626) !important; color:#fff !important; }
-        .key-ai   {
-            background: linear-gradient(180deg, #a855f7, #7c3aed) !important;
-            color:#fff !important; font-size:9.5px !important; font-weight:700;
-            letter-spacing:0.5px;
-        }
-
-        /* Nav disc */
-        .nav-disc {
-            width:90px; height:90px;
-            border-radius:50%;
-            background: radial-gradient(circle, #555568 30%, #44445a 70%);
-            margin: 8px auto;
-            display:flex; align-items:center; justify-content:center;
-            position:relative;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
-        }
-        .nav-disc .nav-center {
-            width:30px; height:30px; border-radius:50%;
-            background: linear-gradient(180deg, #6b6b80, #555568);
-            cursor:pointer; display:flex; align-items:center; justify-content:center;
-            font-size:10px; z-index:2;
-            transition: all 0.1s;
-        }
-        .nav-disc .nav-center:active { transform:scale(0.9); }
-        .nav-dir {
-            position:absolute; width:22px; height:22px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:10px; cursor:pointer; color:#aaabb8;
-            border-radius:50%; transition:all 0.1s;
-        }
-        .nav-dir:hover { color:#fff; }
-        .nav-dir.up    { top:4px; }
-        .nav-dir.down  { bottom:4px; }
-        .nav-dir.left  { left:4px; }
-        .nav-dir.right { right:4px; }
-
-        /* ───────── Control Panel ───────── */
         .control-panel {
             background: rgba(30,27,75,0.7);
             backdrop-filter: blur(16px);
@@ -190,33 +39,23 @@
             border-radius: 16px;
         }
         .toggle-switch {
-            width: 48px; height: 26px;
-            background: #374151;
-            border-radius: 13px;
-            position:relative;
-            cursor:pointer;
-            transition: background 0.3s;
+            width:48px; height:26px; background:#374151; border-radius:13px;
+            position:relative; cursor:pointer; transition:background 0.3s;
         }
-        .toggle-switch.active { background: #22c55e; }
+        .toggle-switch.active { background:#22c55e; }
         .toggle-switch .toggle-dot {
-            width:20px; height:20px;
-            background:#fff;
-            border-radius:50%;
-            position:absolute;
-            top:3px; left:3px;
-            transition: left 0.3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            width:20px; height:20px; background:#fff; border-radius:50%;
+            position:absolute; top:3px; left:3px; transition:left 0.3s;
+            box-shadow:0 1px 3px rgba(0,0,0,0.3);
         }
         .toggle-switch.active .toggle-dot { left:25px; }
-
-        /* ───────── Log Console ───────── */
         .log-console {
             background: #0d1117;
             border: 1px solid rgba(139,92,246,0.15);
             border-radius: 12px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
-            max-height: 220px;
+            max-height: 300px;
             overflow-y: auto;
         }
         .log-console::-webkit-scrollbar { width:6px; }
@@ -229,110 +68,32 @@
         .log-entry.warn  .msg { color:#fbbf24; }
         .log-entry.error .msg { color:#f87171; }
         .log-entry.ai    .msg { color:#c084fc; }
-
-        /* ───────── Animations ───────── */
-        @keyframes ring-shake {
-            0%,100% { transform:rotate(0); }
-            20%     { transform:rotate(-8deg); }
-            40%     { transform:rotate(8deg); }
-            60%     { transform:rotate(-5deg); }
-            80%     { transform:rotate(5deg); }
-        }
-        .ringing { animation: ring-shake 0.4s ease-in-out 3; }
-
-        @keyframes pulse-glow {
-            0%,100% { box-shadow: 0 0 5px rgba(168,85,247,0.3); }
-            50%     { box-shadow: 0 0 20px rgba(168,85,247,0.7); }
-        }
-        .ai-active { animation: pulse-glow 1.5s ease-in-out infinite; }
-
-        @keyframes lcd-flash {
-            0%,100% { background: var(--lcd-bg); }
-            50%     { background: #d4e6b0; }
-        }
-        .lcd-flash { animation: lcd-flash 0.3s ease 2; }
-
         .fade-in { animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-        /* ───────── Message Bubbles (4G phone) ───────── */
-        .msg-bubble {
-            max-width:85%;
-            padding: 8px 12px;
-            border-radius: 14px;
-            font-size: 12px;
-            line-height:1.45;
-            word-break:break-word;
-        }
-        .msg-sent {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color:#fff;
-            margin-left:auto;
-            border-bottom-right-radius: 4px;
-        }
-        .msg-received {
-            background: #1e293b;
-            color:#cbd5e1;
-            border-bottom-left-radius: 4px;
-        }
-
-        /* ───────── Speaker/Mic wave animations ───────── */
-        .speaker-waves {
-            display:none; position:absolute; top:8px; right:8px;
-        }
-        .speaker-waves.active { display:flex; gap:2px; align-items:flex-end; }
-        .speaker-waves span {
-            width:3px; background:#2a3b1a; border-radius:1px;
-            animation: wave-bar 0.6s ease-in-out infinite alternate;
-        }
-        .speaker-waves span:nth-child(1) { height:6px; animation-delay:0s; }
-        .speaker-waves span:nth-child(2) { height:10px; animation-delay:0.15s; }
-        .speaker-waves span:nth-child(3) { height:14px; animation-delay:0.3s; }
-        .speaker-waves span:nth-child(4) { height:10px; animation-delay:0.45s; }
-        .speaker-waves span:nth-child(5) { height:6px; animation-delay:0.6s; }
-        @keyframes wave-bar {
-            from { transform:scaleY(0.4); }
-            to   { transform:scaleY(1); }
-        }
-
-        /* 🎙️ Recording Indicator pulse */
-        @keyframes pulse-mic {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        .recording-icon {
-            animation: pulse-mic 1s infinite;
-            color: #b91c1c;
-        }
-
-        /* ───────── Quick-message chips ───────── */
-        .chip {
-            display:inline-block;
-            padding:5px 12px;
-            background: rgba(59,130,246,0.15);
-            border:1px solid rgba(59,130,246,0.3);
-            border-radius:20px;
-            font-size:11px;
-            cursor:pointer;
-            transition:all 0.2s;
-            color:#93c5fd;
-        }
-        .chip:hover { background:rgba(59,130,246,0.3); color:#fff; }
-
-        /* Status badges */
         .badge { padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
         .badge-on  { background:rgba(34,197,94,0.2); color:#4ade80; }
         .badge-off { background:rgba(239,68,68,0.2); color:#f87171; }
+        .launch-card {
+            background: rgba(30,27,75,0.5);
+            border: 1px solid rgba(139,92,246,0.2);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .launch-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139,92,246,0.5);
+            box-shadow: 0 12px 30px rgba(139,92,246,0.15);
+        }
     </style>
 </head>
 <body>
-    <!-- ═══════ Background Particles ═══════ -->
     <div class="bg-particles" id="particles"></div>
 
-    <!-- ═══════ Header ═══════ -->
+    <!-- Header -->
     <header class="header sticky top-0 z-50 px-6 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
                     <i class="fas fa-microphone-alt text-white text-lg"></i>
@@ -341,13 +102,13 @@
                     <h1 class="text-lg font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                         DadaAI <span class="text-xs font-normal text-gray-400">/ VaaniAI</span>
                     </h1>
-                    <p class="text-[10px] text-gray-500 tracking-wider uppercase">Live Integrated Simulator</p>
+                    <p class="text-[10px] text-gray-500 tracking-wider uppercase">Control Dashboard</p>
                 </div>
             </div>
             <div class="flex items-center gap-4 text-xs text-gray-400">
                 <span class="flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full inline-block" id="backendHealthDot" style="background-color: #ef4444;"></span>
-                    Backend Status: <span class="font-semibold text-white" id="backendHealthText">Offline</span>
+                    Backend: <span class="font-semibold text-white" id="backendHealthText">Offline</span>
                 </span>
                 <span class="badge badge-on" id="headerStatus">
                     <i class="fas fa-circle text-[6px] mr-1"></i> System Active
@@ -356,291 +117,143 @@
         </div>
     </header>
 
-    <!-- ═══════ Main Layout ═══════ -->
-    <main class="relative z-10 max-w-7xl mx-auto px-4 py-6">
-        <div class="flex flex-wrap justify-center items-start gap-8">
-
-            <!-- ━━━ 4G Smartphone (Sender) ━━━ -->
-            <div class="flex flex-col items-center gap-3">
-                <div class="text-center">
-                    <span class="text-xs font-semibold text-blue-400 tracking-wider uppercase">
-                        <i class="fas fa-mobile-alt mr-1"></i> 4G Smartphone
-                    </span>
-                    <p class="text-[10px] text-gray-500 mt-0.5">Caregiver (Sender)</p>
-                </div>
-                <div class="smartphone">
-                    <div class="smartphone-screen">
-                        <div class="notch"></div>
-                        <!-- Status bar -->
-                        <div class="flex justify-between items-center px-4 py-1.5 text-[10px] text-gray-400">
-                            <span>19:04</span>
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-signal text-[8px]"></i>
-                                <span class="text-[8px]">5G</span>
-                                <i class="fas fa-wifi text-[8px]"></i>
-                                <i class="fas fa-battery-full text-[8px]"></i>
-                            </div>
-                        </div>
-                        <!-- Chat header -->
-                        <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-800">
-                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-[10px] font-bold">दा</div>
-                            <div>
-                                <div class="text-xs font-semibold text-white">Dada Ji</div>
-                                <div class="text-[9px] text-green-400" id="smsStatusIndicator">Online via DadaAI API</div>
-                            </div>
-                            <div class="ml-auto flex gap-3 text-gray-500">
-                                <i class="fas fa-phone text-xs cursor-pointer hover:text-green-400 transition"></i>
-                                <i class="fas fa-ellipsis-v text-xs cursor-pointer hover:text-white transition"></i>
-                            </div>
-                        </div>
-                        <!-- Chat messages area -->
-                        <div id="chatMessages" class="flex-1 p-3 flex flex-col gap-2 overflow-y-auto" style="max-height:260px; min-height:260px;">
-                            <div class="text-center text-[9px] text-gray-600 py-2">
-                                <i class="fas fa-lock text-[8px] mr-1"></i> Connected to backend DB
-                            </div>
-                        </div>
-                        <!-- Input area -->
-                        <div class="bg-[#161b22] px-3 py-2 border-t border-gray-800">
-                            <div class="flex items-center gap-2">
-                                <input id="msgInput" type="text" placeholder="Type a message…"
-                                    class="flex-1 bg-[#0d1117] text-white text-xs px-3 py-2 rounded-full border border-gray-700 outline-none focus:border-blue-500 transition placeholder:text-gray-600">
-                                <button id="sendBtn" onclick="sendMessage()"
-                                    class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs hover:scale-110 active:scale-95 transition-transform">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                            <!-- Quick message chips -->
-                            <div class="flex flex-wrap gap-1.5 mt-2">
-                                <span class="chip" onclick="quickSend(this)">Dada ji kal 5 baje ghar aa jana</span>
-                                <span class="chip" onclick="quickSend(this)">Your OTP is 483921</span>
-                                <span class="chip" onclick="quickSend(this)">Your electricity bill of Rs 850 is due</span>
-                                <span class="chip" onclick="quickSend(this)">Dawa le lena</span>
-                            </div>
+    <main class="relative z-10 max-w-6xl mx-auto px-4 py-6">
+        <!-- Launch Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="launch-card" onclick="window.open('sender.html','_blank')">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
+                        <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">📱 Caregiver's Phone (4G)</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Open the Caregiver smartphone sender UI in a new tab. Send messages & reminders to Dada Ji.</p>
+                        <div class="flex items-center gap-1 mt-2 text-blue-400 text-[11px] font-semibold">
+                            <i class="fas fa-external-link-alt text-[9px]"></i> Open sender.html
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ━━━ Control Panel (Center) ━━━ -->
-            <div class="flex flex-col gap-4 w-72 mt-8">
-                <!-- Mode & Connection Controls -->
-                <div class="control-panel p-4">
-                    <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-3">
-                        <i class="fas fa-network-wired mr-1"></i> Simulator Mode
-                    </h3>
-
-                    <!-- App Mode Selector -->
-                    <div class="mb-3">
-                        <label class="text-[10px] text-gray-400 uppercase tracking-wider block mb-1">API Integration Mode</label>
-                        <select id="apiMode" onchange="changeApiMode()" class="w-full bg-black/40 text-xs text-white border border-purple-500/30 rounded p-1.5 outline-none focus:border-purple-500">
-                            <option value="mock">Local Mock Mode (No backend)</option>
-                            <option value="live">Live Backend Mode (FastAPI)</option>
-                        </select>
+            <div class="launch-card" onclick="window.open('receiver.html','_blank')">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shrink-0">
+                        <i class="fas fa-phone-alt text-white text-2xl"></i>
                     </div>
-
-                    <!-- Backend API URL input -->
-                    <div class="mb-4 transition-all duration-300" id="apiUrlContainer" style="display: none;">
-                        <label class="text-[10px] text-gray-400 uppercase tracking-wider block mb-1">Backend Server URL</label>
-                        <div class="flex gap-2">
-                            <input id="apiUrl" type="text" value="http://127.0.0.1:8000" class="flex-1 bg-black/40 text-xs text-white border border-gray-700 rounded px-2 py-1 outline-none focus:border-purple-500">
-                            <button onclick="checkBackendHealth()" class="bg-purple-600 hover:bg-purple-700 text-white text-[10px] px-2 py-1 rounded transition">
-                                Test
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Internet / AI toggles (only relevant for Mock Mode, disabled in Live Mode) -->
-                    <div id="mockToggles">
-                        <div class="flex items-center justify-between py-2 border-t border-gray-700/30">
-                            <div>
-                                <div class="text-xs font-semibold text-gray-200"><i class="fas fa-wifi mr-1 text-blue-400"></i> Mock Internet</div>
-                                <div class="text-[10px] text-gray-500" id="internetLabel">Connected</div>
-                            </div>
-                            <div class="toggle-switch active" id="toggleInternet" onclick="toggleControl('internet')">
-                                <div class="toggle-dot"></div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between py-2 border-t border-gray-700/30">
-                            <div>
-                                <div class="text-xs font-semibold text-gray-200"><i class="fas fa-robot mr-1 text-purple-400"></i> Mock AI Server</div>
-                                <div class="text-[10px] text-gray-500" id="aiLabel">Active</div>
-                            </div>
-                            <div class="toggle-switch active" id="toggleAI" onclick="toggleControl('ai')">
-                                <div class="toggle-dot"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Status Summary -->
-                    <div class="mt-3 pt-3 border-t border-gray-700/30">
-                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Current Mode</div>
-                        <div id="modeIndicator" class="text-sm font-bold text-green-400">
-                            <i class="fas fa-volume-up mr-1"></i> AI Voice Mode
-                        </div>
-                        <p id="modeDesc" class="text-[10px] text-gray-500 mt-1">
-                            Messages will be spoken aloud in Hindi with AI explanation.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Signal flow diagram -->
-                <div class="control-panel p-4">
-                    <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-3">
-                        <i class="fas fa-project-diagram mr-1"></i> Signal Pipeline
-                    </h3>
-                    <div class="flex flex-col items-center gap-1 text-[10px]">
-                        <div class="flex items-center gap-2 text-blue-400">
-                            <i class="fas fa-mobile-alt"></i> <span>Caregiver Phone</span>
-                        </div>
-                        <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
-                        <div class="flex items-center gap-2" id="flowInternet">
-                            <i class="fas fa-wifi text-green-400"></i> <span class="text-green-400">Internet ✓</span>
-                        </div>
-                        <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
-                        <div class="flex items-center gap-2" id="flowAI">
-                            <i class="fas fa-brain text-green-400"></i> <span class="text-green-400">AI Server ✓</span>
-                        </div>
-                        <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
-                        <div class="flex items-center gap-2" id="flowOutput">
-                            <i class="fas fa-volume-up text-purple-400"></i> <span class="text-purple-400">Hindi Voice Stream</span>
-                        </div>
-                        <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
-                        <div class="flex items-center gap-2 text-amber-400">
-                            <i class="fas fa-phone-alt"></i> <span>Dada Ji's Phone</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="control-panel p-4">
-                    <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-3">
-                        <i class="fas fa-chart-bar mr-1"></i> Session Stats
-                    </h3>
-                    <div class="grid grid-cols-2 gap-2 text-center">
-                        <div class="bg-black/30 rounded-lg p-2">
-                            <div class="text-lg font-bold text-blue-400" id="statSent">0</div>
-                            <div class="text-[9px] text-gray-500">Sent</div>
-                        </div>
-                        <div class="bg-black/30 rounded-lg p-2">
-                            <div class="text-lg font-bold text-green-400" id="statReceived">0</div>
-                            <div class="text-[9px] text-gray-500">Received</div>
-                        </div>
-                        <div class="bg-black/30 rounded-lg p-2">
-                            <div class="text-lg font-bold text-purple-400" id="statAI">0</div>
-                            <div class="text-[9px] text-gray-500">AI Processed</div>
-                        </div>
-                        <div class="bg-black/30 rounded-lg p-2">
-                            <div class="text-lg font-bold text-amber-400" id="statFallback">0</div>
-                            <div class="text-[9px] text-gray-500">Fallback</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ━━━ 2G Feature Phone (Receiver) ━━━ -->
-            <div class="flex flex-col items-center gap-3">
-                <div class="text-center">
-                    <span class="text-xs font-semibold text-purple-400 tracking-wider uppercase">
-                        <i class="fas fa-phone-alt mr-1"></i> 2G Feature Phone
-                    </span>
-                    <p class="text-[10px] text-gray-500 mt-0.5">Dada Ji's Phone (Receiver)</p>
-                </div>
-                <div class="feature-phone" id="featurePhone">
-                    <!-- Speaker grille -->
-                    <div class="flex justify-center gap-0.5 mb-2">
-                        <div class="w-1 h-1 rounded-full bg-gray-600"></div>
-                        <div class="w-1 h-1 rounded-full bg-gray-600"></div>
-                        <div class="w-10 h-1 rounded-full bg-gray-600"></div>
-                        <div class="w-1 h-1 rounded-full bg-gray-600"></div>
-                        <div class="w-1 h-1 rounded-full bg-gray-600"></div>
-                    </div>
-
-                    <!-- LCD Screen -->
-                    <div class="lcd-screen" id="lcdScreen">
-                        <!-- Speaker wave animation -->
-                        <div class="speaker-waves" id="speakerWaves">
-                            <span></span><span></span><span></span><span></span><span></span>
-                        </div>
-                        <!-- LCD Header -->
-                        <div class="lcd-header">
-                            <span id="lcdSignal">▌▌▌ 2G</span>
-                            <span id="lcdTitle">DadaAI</span>
-                            <span id="lcdBattery">🔋 92%</span>
-                        </div>
-                        <!-- LCD Content -->
-                        <div id="lcdContent" class="mt-1">
-                            <div style="text-align:center; padding-top:30px;">
-                                <div style="font-size:22px;">🙏</div>
-                                <div style="font-size:13px; font-weight:bold; margin-top:6px;">नमस्ते दादा जी</div>
-                                <div style="font-size:9px; margin-top:4px; color:#5a6b3a;">DadaAI Ready</div>
-                                <div style="font-size:8px; margin-top:12px; color:#7a8b5a;">कोई नया संदेश नहीं</div>
-                            </div>
-                        </div>
-                        <!-- LCD Footer -->
-                        <div style="position:absolute; bottom:6px; left:10px; right:10px; display:flex; justify-content:space-between; font-size:8px; color:#6a7b4a;">
-                            <span id="lcdSoftLeft">Menu</span>
-                            <span id="lcdSoftRight">Contacts</span>
-                        </div>
-                    </div>
-
-                    <!-- Navigation Disc -->
-                    <div class="nav-disc">
-                        <div class="nav-dir up" onclick="navAction('up')"><i class="fas fa-chevron-up"></i></div>
-                        <div class="nav-dir down" onclick="navAction('down')"><i class="fas fa-chevron-down"></i></div>
-                        <div class="nav-dir left" onclick="navAction('left')"><i class="fas fa-chevron-left"></i></div>
-                        <div class="nav-dir right" onclick="navAction('right')"><i class="fas fa-chevron-right"></i></div>
-                        <div class="nav-center" onclick="navAction('select')"><i class="fas fa-check"></i></div>
-                    </div>
-
-                    <!-- Soft keys + Call/End -->
-                    <div class="keypad-row mt-1">
-                        <div class="key key-nav" onclick="softKey('left')" style="font-size:9px;">Menu</div>
-                        <div class="key key-call" onclick="callAction('call')" style="width:44px;"><i class="fas fa-phone"></i></div>
-                        <div class="key key-end" onclick="callAction('end')" style="width:44px;"><i class="fas fa-phone-slash"></i></div>
-                        <div class="key key-nav" onclick="softKey('right')" style="font-size:9px;">Back</div>
-                    </div>
-
-                    <!-- Number keys -->
-                    <div class="keypad">
-                        <div class="keypad-row">
-                            <div class="key" onclick="keyPress('1')">1 <span class="sub"></span></div>
-                            <div class="key" onclick="keyPress('2')">2 <span class="sub">ABC</span></div>
-                            <div class="key" onclick="keyPress('3')">3 <span class="sub">DEF</span></div>
-                        </div>
-                        <div class="keypad-row">
-                            <div class="key" onclick="keyPress('4')">4 <span class="sub">GHI</span></div>
-                            <div class="key" onclick="keyPress('5')">5 <span class="sub">JKL</span></div>
-                            <div class="key" onclick="keyPress('6')">6 <span class="sub">MNO</span></div>
-                        </div>
-                        <div class="keypad-row">
-                            <div class="key" onclick="keyPress('7')">7 <span class="sub">PQRS</span></div>
-                            <div class="key" onclick="keyPress('8')">8 <span class="sub">TUV</span></div>
-                            <div class="key" onclick="keyPress('9')">9 <span class="sub">WXYZ</span></div>
-                        </div>
-                        <div class="keypad-row">
-                            <div class="key" onclick="keyPress('*')">*</div>
-                            <div class="key" onclick="keyPress('0')">0 <span class="sub">+</span></div>
-                            <div class="key" onclick="keyPress('#')">#</div>
-                        </div>
-                    </div>
-
-                    <!-- AI Voice Button -->
-                    <div class="keypad-row mt-2">
-                        <div class="key key-ai" id="aiVoiceBtn" onclick="triggerVoiceAI()" style="width:180px; height:38px;">
-                            <i class="fas fa-microphone mr-1"></i> <span id="voiceBtnText">VOICE AI</span>
+                    <div>
+                        <h3 class="text-base font-bold text-white">📞 Dada Ji's Phone (2G)</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Open the retro feature phone UI. Test full Voice AI assistant, local queries, and network recovery.</p>
+                        <div class="flex items-center gap-1 mt-2 text-purple-400 text-[11px] font-semibold">
+                            <i class="fas fa-external-link-alt text-[9px]"></i> Open receiver.html
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ━━━ Backend Logs Console ━━━ -->
-        <div class="mt-8 max-w-5xl mx-auto">
+        <!-- Controls Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Mode & Connection Controls -->
+            <div class="control-panel p-5">
+                <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-4">
+                    <i class="fas fa-network-wired mr-1"></i> System Configuration
+                </h3>
+
+                <!-- API mode -->
+                <div class="mb-3">
+                    <label class="text-[10px] text-gray-400 uppercase tracking-wider block mb-1">API Integration Mode</label>
+                    <select id="apiMode" onchange="changeApiMode()" class="w-full bg-black/40 text-xs text-white border border-purple-500/30 rounded p-2 outline-none focus:border-purple-500">
+                        <option value="mock">Local Mock Mode (No backend)</option>
+                        <option value="live">Live Backend Mode (FastAPI)</option>
+                    </select>
+                </div>
+
+                <!-- API URL -->
+                <div class="mb-3 transition-all duration-300" id="apiUrlContainer" style="display:none;">
+                    <label class="text-[10px] text-gray-400 uppercase tracking-wider block mb-1">Backend Server URL</label>
+                    <div class="flex gap-2">
+                        <input id="apiUrl" type="text" value="http://127.0.0.1:8000" class="flex-1 bg-black/40 text-xs text-white border border-gray-700 rounded px-2 py-1.5 outline-none focus:border-purple-500">
+                        <button onclick="checkBackendHealth()" class="bg-purple-600 hover:bg-purple-700 text-white text-[10px] px-3 py-1.5 rounded transition font-semibold">
+                            Test
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quality simulation -->
+                <div class="mb-3 pt-2.5 border-t border-gray-700/30">
+                    <label class="text-[10px] text-gray-400 uppercase tracking-wider block mb-1">Network/Signal Quality</label>
+                    <select id="connectionQuality" onchange="changeConnectionQuality()" class="w-full bg-black/40 text-xs text-white border border-purple-500/30 rounded p-2 outline-none focus:border-purple-500">
+                        <option value="full">🟢 Full — Voice AI + Screen text</option>
+                        <option value="low">🟡 Low — Screen Text Only (Silent)</option>
+                        <option value="offline">🔴 Offline — Silent Raw SMS Only</option>
+                    </select>
+                </div>
+
+                <!-- Mock toggles (used as visual override in mock mode) -->
+                <div id="mockToggles" style="display:none;">
+                    <input type="hidden" id="toggleInternet" value="on">
+                    <input type="hidden" id="toggleAI" value="on">
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-gray-700/30">
+                    <div class="text-[10px] text-gray-500 uppercase tracking-wider mb-1.5">Current Mode</div>
+                    <div id="modeIndicator" class="text-sm font-bold text-green-400">
+                        <i class="fas fa-volume-up mr-1"></i> AI Voice Mode
+                    </div>
+                    <p id="modeDesc" class="text-[10px] text-gray-500 mt-1">Messages spoken aloud in Hindi with AI explanation.</p>
+                </div>
+            </div>
+
+            <!-- Signal Pipeline -->
+            <div class="control-panel p-5">
+                <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-4">
+                    <i class="fas fa-project-diagram mr-1"></i> Signal Pipeline
+                </h3>
+                <div class="flex flex-col items-center gap-1.5 text-[10px]">
+                    <div class="flex items-center gap-2 text-blue-400"><i class="fas fa-mobile-alt"></i> <span>Caregiver Phone (sender.html)</span></div>
+                    <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
+                    <div class="flex items-center gap-2" id="flowInternet"><i class="fas fa-wifi text-green-400"></i> <span class="text-green-400">Internet ✓</span></div>
+                    <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
+                    <div class="flex items-center gap-2" id="flowAI"><i class="fas fa-brain text-green-400"></i> <span class="text-green-400">AI Server ✓</span></div>
+                    <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
+                    <div class="flex items-center gap-2" id="flowOutput"><i class="fas fa-volume-up text-purple-400"></i> <span class="text-purple-400">Hindi Voice Stream</span></div>
+                    <i class="fas fa-arrow-down text-gray-600 text-[8px]"></i>
+                    <div class="flex items-center gap-2 text-amber-400"><i class="fas fa-phone-alt"></i> <span>Dada Ji (receiver.html)</span></div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="control-panel p-5">
+                <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider mb-4">
+                    <i class="fas fa-chart-bar mr-1"></i> Session Stats
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="bg-black/30 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-blue-400" id="statSent">0</div>
+                        <div class="text-[9px] text-gray-500">Sent</div>
+                    </div>
+                    <div class="bg-black/30 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-green-400" id="statReceived">0</div>
+                        <div class="text-[9px] text-gray-500">Received</div>
+                    </div>
+                    <div class="bg-black/30 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-purple-400" id="statAI">0</div>
+                        <div class="text-[9px] text-gray-500">AI Processed</div>
+                    </div>
+                    <div class="bg-black/30 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-amber-400" id="statFallback">0</div>
+                        <div class="text-[9px] text-gray-500">Fallback</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backend Logs Console -->
+        <div>
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">
                     <i class="fas fa-terminal mr-1 text-green-400"></i> Backend Activity Logs
-                    <span class="text-[10px] font-normal text-gray-600 ml-2">(Trace of HTTP requests / mock actions)</span>
+                    <span class="text-[10px] font-normal text-gray-600 ml-2">(Aggregated from all simulator tabs)</span>
                 </h3>
                 <button onclick="clearLogs()" class="text-[10px] text-gray-500 hover:text-white transition cursor-pointer">
                     <i class="fas fa-trash-alt mr-1"></i> Clear
@@ -649,864 +262,201 @@
             <div class="log-console p-2" id="logConsole">
                 <div class="log-entry info">
                     <span class="timestamp">[BOOT]</span>
-                    <span class="msg"> DadaAI integrated simulator loaded in browser. Ready for testing.</span>
+                    <span class="msg"> ℹ. DadaAI Dashboard loaded. Open Sender & Receiver tabs above to begin simulation.</span>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- ═══════ Footer ═══════ -->
     <footer class="relative z-10 text-center py-6 text-[10px] text-gray-600">
         DadaAI / VaaniAI — AI Voice Assistant for Feature Phones &nbsp;|&nbsp;
-        Integrates with local FastAPI server on port 8000 &nbsp;|&nbsp;
-        <i class="fas fa-code text-purple-500"></i> Built for B.Tech / Hackathon project
+        Multi-page Integrated Simulator &nbsp;|&nbsp;
+        <i class="fas fa-code text-purple-500"></i> B.Tech / Hackathon Project
     </footer>
 
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- ═══════ JavaScript — All Logic ═══════ -->
-    <!-- ═══════════════════════════════════════════════════════ -->
     <script>
-    // ╔══════════════════════════════════════════╗
-    // ║          STATE                           ║
-    // ╚══════════════════════════════════════════╝
-    const state = {
-        apiMode: 'mock',      // 'mock' (local browser logic) | 'live' (FastAPI REST backend)
-        backendUrl: 'http://127.0.0.1:8000',
+    // ═══════ STATE ═══════
+    const controlState = {
+        connectionQuality: 'full',
         backendOnline: false,
-        internetOn: true,
-        aiOn: true,
-        messages: [],         // Received messages
-        currentView: 'home',   // home | inbox | reading
-        selectedMsg: 0,
-        phoneNum: '+919876543210', // Default caregiver number
-        stats: { sent:0, received:0, ai:0, fallback:0 },
-        isRecording: false,
-        mediaRecorder: null,
-        audioChunks: []
+        stats: { sent: 0, received: 0, ai: 0, fallback: 0 }
     };
 
-    // Current streaming audio object
-    let currentAudio = null;
+    // ═══════ BROADCAST CHANNEL ═══════
+    const bc = new BroadcastChannel('dadaai_channel');
 
-    // ╔══════════════════════════════════════════╗
-    // ║       MOCK DATA (Fallback/Offline)       ║
-    // ╚══════════════════════════════════════════╝
-    const aiTranslations = {
-        'dada ji kal 5 baje ghar aa jana': 'दादा जी, विवेक ने कहा है कि कल शाम को 5 बजे घर आ जाना।',
-        'your otp is 483921': 'दादा जी, आपके फोन पर बैंक का लॉगिन पासवर्ड (OTP) 483921 आया है। किसी से शेयर न करें।',
-        'your electricity bill of rs 850 is due': 'दादा जी, बिजली का बिल 850 रुपये बाकी है, जिसे जल्दी भरना होगा।',
-        'dawa le lena': 'दादा जी, समय पर अपनी दवाइयाँ ले लेना।',
-        'kal 10 baje bank jana hai': 'दादा जी, कल सुबह 10 बजे बैंक जाना है।',
-        'your account has been credited with rs 500': 'दादा जी, आपके खाते में 500 रुपये जमा हुए हैं।'
+    bc.onmessage = (event) => {
+        const data = event.data;
+        if (data.type === 'LOG') {
+            log(data.level, data.text);
+        } else if (data.type === 'STATS') {
+            controlState.stats.sent += data.sent || 0;
+            controlState.stats.received += data.received || 0;
+            controlState.stats.ai += data.ai || 0;
+            controlState.stats.fallback += data.fallback || 0;
+            updateStats();
+        } else if (data.type === 'CONNECTION_QUALITY') {
+            controlState.connectionQuality = data.quality;
+            document.getElementById('connectionQuality').value = data.quality;
+            updateModeIndicator();
+        }
     };
 
-    const offlineTranslations = {
-        'otp': 'आपका पासवर्ड (OTP) है',
-        'credit': 'खाते में पैसे जमा हुए हैं',
-        'bill': 'बिल का भुगतान बाकी है',
-        'dawa': 'दवा ले लेना',
-        'ghar': 'घर आ जाना'
-    };
-
-    // ╔══════════════════════════════════════════╗
-    // ║       LOGGING FUNCTIONS                  ║
-    // ╚══════════════════════════════════════════╝
+    // ═══════ LOGGING ═══════
     function log(level, msg) {
-        const console = document.getElementById('logConsole');
-        const time = new Date().toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-        const levelTag = { info:'ℹ️', success:'✅', warn:'⚠️', error:'❌', ai:'🤖' }[level] || '•';
+        const el = document.getElementById('logConsole');
+        const time = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const icon = { info: 'ℹ️', success: '✅', warn: '⚠️', error: '❌', ai: '🤖' }[level] || '•';
         const entry = document.createElement('div');
         entry.className = `log-entry ${level} fade-in`;
-        entry.innerHTML = `<span class="timestamp">[${time}]</span> <span class="msg">${levelTag} ${msg}</span>`;
-        console.appendChild(entry);
-        console.scrollTop = console.scrollHeight;
+        entry.innerHTML = `<span class="timestamp">[${time}]</span> <span class="msg">${icon} ${msg}</span>`;
+        el.appendChild(entry);
+        el.scrollTop = el.scrollHeight;
     }
 
     function clearLogs() {
         document.getElementById('logConsole').innerHTML = '';
-        log('info', 'Console activity logs cleared.');
+        log('info', 'Logs cleared.');
     }
 
-    // ╔══════════════════════════════════════════╗
-    // ║       MODE & API SWITCHERS               ║
-    // ╚══════════════════════════════════════════╝
+    // ═══════ MODE SWITCHING ═══════
     function changeApiMode() {
         const mode = document.getElementById('apiMode').value;
-        state.apiMode = mode;
+        localStorage.setItem('dadaai_api_mode', mode);
 
-        const urlContainer = document.getElementById('apiUrlContainer');
-        const mockToggles = document.getElementById('mockToggles');
-        const statusText = document.getElementById('smsStatusIndicator');
+        document.getElementById('apiUrlContainer').style.display = mode === 'live' ? 'block' : 'none';
 
         if (mode === 'live') {
-            urlContainer.style.display = 'block';
-            mockToggles.style.display = 'none';
-            statusText.textContent = 'Connecting to FastAPI backend...';
-            log('info', 'Switched to Live Backend Mode. Connecting to local server...');
+            log('info', 'Switched to Live Backend Mode. Connecting...');
             checkBackendHealth();
         } else {
-            urlContainer.style.display = 'none';
-            mockToggles.style.display = 'block';
-            statusText.textContent = 'Offline (Browser Mock Mode)';
-            log('info', 'Switched to Browser Mock Mode. Backend calls offline.');
-            updateBackendStatusIndicator(false);
-            updateModeIndicator();
+            log('info', 'Switched to Mock Mode. All processing happens in browser.');
+            updateBackendStatus(false);
         }
+
+        bc.postMessage({ type: 'CONFIG_CHANGED' });
+        updateModeIndicator();
     }
 
     async function checkBackendHealth() {
-        if (state.apiMode !== 'live') return;
+        const mode = document.getElementById('apiMode').value;
+        if (mode !== 'live') return;
 
         const url = document.getElementById('apiUrl').value.trim();
-        state.backendUrl = url;
-
+        localStorage.setItem('dadaai_backend_url', url);
         log('info', `GET ${url}/api/v1/health ...`);
         try {
-            const res = await fetch(`${url}/api/v1/health`, { method: 'GET' });
+            const res = await fetch(`${url}/api/v1/health`);
             if (res.ok) {
-                const data = await res.json();
-                state.backendOnline = true;
-                updateBackendStatusIndicator(true);
-                log('success', 'FastAPI Backend is ONLINE. Ready for live API flows.');
-            } else {
-                throw new Error(`HTTP ${res.status}`);
-            }
+                controlState.backendOnline = true;
+                updateBackendStatus(true);
+                log('success', 'FastAPI Backend is ONLINE. Ready for live transactions.');
+            } else { throw new Error(`HTTP ${res.status}`); }
         } catch (err) {
-            state.backendOnline = false;
-            updateBackendStatusIndicator(false);
-            log('error', `Backend connection failed: ${err.message}. Is server running? (uvicorn app.main:app)`);
+            controlState.backendOnline = false;
+            updateBackendStatus(false);
+            log('error', `Backend unreachable: ${err.message}. Run: uvicorn app.main:app --port 8000`);
         }
         updateModeIndicator();
     }
 
-    function updateBackendStatusIndicator(online) {
-        const text = document.getElementById('backendHealthText');
-        const dot = document.getElementById('backendHealthDot');
-        const smsStatus = document.getElementById('smsStatusIndicator');
-
-        if (online) {
-            text.textContent = 'Online';
-            text.className = 'font-semibold text-green-400';
-            dot.style.backgroundColor = '#22c55e';
-            smsStatus.textContent = 'Connected to Backend';
-            smsStatus.className = 'text-[9px] text-green-400';
-        } else {
-            text.textContent = 'Offline';
-            text.className = 'font-semibold text-red-500';
-            dot.style.backgroundColor = '#ef4444';
-            smsStatus.textContent = state.apiMode === 'live' ? 'Backend Offline (Mock Fallback)' : 'Local Mock Mode';
-            smsStatus.className = 'text-[9px] text-gray-500';
-        }
+    function updateBackendStatus(online) {
+        document.getElementById('backendHealthText').textContent = online ? 'Online' : 'Offline';
+        document.getElementById('backendHealthText').className = online ? 'font-semibold text-green-400' : 'font-semibold text-red-500';
+        document.getElementById('backendHealthDot').style.backgroundColor = online ? '#22c55e' : '#ef4444';
     }
 
-    function toggleControl(type) {
-        if (type === 'internet') {
-            state.internetOn = !state.internetOn;
-            const el = document.getElementById('toggleInternet');
-            el.classList.toggle('active', state.internetOn);
-            document.getElementById('internetLabel').textContent = state.internetOn ? 'Connected' : 'Disconnected';
-            log(state.internetOn ? 'success' : 'warn', `Mock Internet ${state.internetOn ? 'CONNECTED' : 'DISCONNECTED'}`);
+    // ═══════ QUALITY OVERRIDE ═══════
+    function changeConnectionQuality() {
+        const quality = document.getElementById('connectionQuality').value;
+        controlState.connectionQuality = quality;
+        localStorage.setItem('dadaai_connection_quality', quality);
 
-            const flowI = document.getElementById('flowInternet');
-            flowI.innerHTML = state.internetOn
-                ? '<i class="fas fa-wifi text-green-400"></i> <span class="text-green-400">Internet ✓</span>'
-                : '<i class="fas fa-wifi text-red-400"></i> <span class="text-red-400">Internet ✗</span>';
+        // Sync receiver tab
+        bc.postMessage({ type: 'CONNECTION_QUALITY', quality });
 
-            document.getElementById('lcdSignal').textContent = state.internetOn ? '▌▌▌ 2G' : '▌ 2G';
-        } else {
-            state.aiOn = !state.aiOn;
-            const el = document.getElementById('toggleAI');
-            el.classList.toggle('active', state.aiOn);
-            document.getElementById('aiLabel').textContent = state.aiOn ? 'Active' : 'Down';
-            log(state.aiOn ? 'success' : 'error', `Mock AI Server ${state.aiOn ? 'ACTIVE' : 'DOWN'}`);
-
-            const flowA = document.getElementById('flowAI');
-            flowA.innerHTML = state.aiOn
-                ? '<i class="fas fa-brain text-green-400"></i> <span class="text-green-400">AI Server ✓</span>'
-                : '<i class="fas fa-brain text-red-400"></i> <span class="text-red-400">AI Server ✗</span>';
-        }
+        log('info', `Dashboard updated connection quality: ${quality.toUpperCase()}`);
         updateModeIndicator();
     }
 
     function updateModeIndicator() {
-        const mode = document.getElementById('modeIndicator');
+        const mode = localStorage.getItem('dadaai_api_mode') || 'mock';
+        const el = document.getElementById('modeIndicator');
         const desc = document.getElementById('modeDesc');
+        const flowI = document.getElementById('flowInternet');
+        const flowA = document.getElementById('flowAI');
         const flowOut = document.getElementById('flowOutput');
 
-        if (state.apiMode === 'live') {
-            if (state.backendOnline) {
-                mode.innerHTML = '<i class="fas fa-bolt mr-1"></i> Backend Live Assistant';
-                mode.className = 'text-sm font-bold text-green-400';
-                desc.textContent = 'Using real LLM translations & ElevenLabs/Google TTS audio streams.';
-                flowOut.innerHTML = '<i class="fas fa-volume-up text-purple-400"></i> <span class="text-purple-400">Real Voice (TTS)</span>';
-            } else {
-                mode.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Mock Fallback (Offline)';
-                mode.className = 'text-sm font-bold text-amber-400';
-                desc.textContent = 'Backend is unreachable. Falling back to local browser logic.';
-                flowOut.innerHTML = '<i class="fas fa-font text-amber-400"></i> <span class="text-amber-400">Local Browser Fallback</span>';
-            }
-            return;
-        }
+        const quality = controlState.connectionQuality;
 
-        // Mock Mode UI
-        if (state.internetOn && state.aiOn) {
-            mode.innerHTML = '<i class="fas fa-volume-up mr-1"></i> AI Voice Mode';
-            mode.className = 'text-sm font-bold text-green-400';
-            desc.textContent = 'Messages will be spoken aloud in Hindi with AI explanation.';
-            flowOut.innerHTML = '<i class="fas fa-volume-up text-purple-400"></i> <span class="text-purple-400">Hindi Voice</span>';
-        } else if (state.internetOn && !state.aiOn) {
-            mode.innerHTML = '<i class="fas fa-font mr-1"></i> Text Fallback';
-            mode.className = 'text-sm font-bold text-amber-400';
-            desc.textContent = 'AI down. Messages displayed as text on screen (no voice).';
-            flowOut.innerHTML = '<i class="fas fa-font text-amber-400"></i> <span class="text-amber-400">Text Only</span>';
+        // Visual overrides for pipeline indicators
+        if (quality === 'full') {
+            flowI.innerHTML = '<i class="fas fa-wifi text-green-400"></i> <span class="text-green-400">Internet ✓</span>';
+            flowA.innerHTML = '<i class="fas fa-brain text-green-400"></i> <span class="text-green-400">AI Server ✓</span>';
+            flowOut.innerHTML = '<i class="fas fa-volume-up text-purple-400"></i> <span class="text-purple-400">Hindi Voice Stream</span>';
+
+            el.innerHTML = mode === 'live' ? '<i class="fas fa-bolt mr-1"></i> Backend Live Assistant' : '<i class="fas fa-volume-up mr-1"></i> AI Voice Mode';
+            el.className = 'text-sm font-bold text-green-400';
+            desc.textContent = mode === 'live' ? 'Real LLM translations & ElevenLabs/Google TTS audio.' : 'Messages spoken aloud in Hindi with AI explanation.';
+        } else if (quality === 'low') {
+            flowI.innerHTML = '<i class="fas fa-wifi text-amber-400"></i> <span class="text-amber-400">Low Signal ⚡</span>';
+            flowA.innerHTML = '<i class="fas fa-brain text-amber-400"></i> <span class="text-amber-400">Low API Limit ⏳</span>';
+            flowOut.innerHTML = '<i class="fas fa-font text-amber-400"></i> <span class="text-amber-400">Silent Text-Only</span>';
+
+            el.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Low Signal (Text Only)';
+            el.className = 'text-sm font-bold text-amber-400';
+            desc.textContent = 'Voice synthesis disabled to save bandwidth. Messages and replies shown as silent text on screen.';
         } else {
-            mode.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Offline Fallback';
-            mode.className = 'text-sm font-bold text-red-400';
-            desc.textContent = 'No internet. Original SMS displayed on screen silently.';
-            flowOut.innerHTML = '<i class="fas fa-exclamation-triangle text-red-400"></i> <span class="text-red-400">Silent SMS</span>';
+            flowI.innerHTML = '<i class="fas fa-wifi text-red-400"></i> <span class="text-red-400">Offline ✗</span>';
+            flowA.innerHTML = '<i class="fas fa-brain text-red-400"></i> <span class="text-red-400">Server Offline ✗</span>';
+            flowOut.innerHTML = '<i class="fas fa-times-circle text-red-400"></i> <span class="text-red-400">SMS Fallback Only</span>';
+
+            el.innerHTML = '<i class="fas fa-ban mr-1"></i> Offline SMS Fallback';
+            el.className = 'text-sm font-bold text-red-400';
+            desc.textContent = 'No signal. Messages delivered silently as raw SMS with no translation/voice.';
         }
-    }
-
-    // Interval health checking
-    setInterval(checkBackendHealth, 15000);
-
-    // ╔══════════════════════════════════════════╗
-    // ║       4G PHONE: SEND MESSAGE             ║
-    // ╚══════════════════════════════════════════╝
-    function sendMessage() {
-        const input = document.getElementById('msgInput');
-        const text = input.value.trim();
-        if (!text) return;
-        input.value = '';
-        doSend(text);
-    }
-
-    function quickSend(el) {
-        doSend(el.textContent);
-    }
-
-    document.getElementById('msgInput').addEventListener('keydown', e => {
-        if (e.key === 'Enter') sendMessage();
-    });
-
-    function doSend(text) {
-        state.stats.sent++;
-        updateStats();
-
-        addChatBubble(text, 'sent');
-        log('info', `📤 4G phone sends SMS: "${text}"`);
-
-        setTimeout(() => processMessage(text), 500);
-    }
-
-    function addChatBubble(text, type) {
-        const container = document.getElementById('chatMessages');
-        const div = document.createElement('div');
-        div.className = `msg-bubble msg-${type} fade-in`;
-        div.textContent = text;
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║       MESSAGE PROCESSING ROUTER          ║
-    // ╚══════════════════════════════════════════╝
-    function processMessage(text) {
-        if (state.apiMode === 'live' && state.backendOnline) {
-            processWithBackendAPI(text);
-        } else {
-            processWithMockLogic(text);
-        }
-    }
-
-    // ─── LIVE FASTAPI INTEGRATION ───
-    async function processWithBackendAPI(text) {
-        log('info', `POST ${state.backendUrl}/api/v1/sms/incoming ...`);
-        try {
-            const response = await fetch(`${state.backendUrl}/api/v1/sms/incoming`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ from_number: state.phoneNum, body: text })
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const data = await response.json();
-            log('success', `Incoming API responded successfully. Body: "${data.body}"`);
-            addChatBubble(`🤖 AI (Backend): ${data.body}`, 'received');
-
-            state.stats.received++;
-            state.stats.ai++;
-            updateStats();
-
-            // Store message locally for 2G list
-            state.messages.push({
-                original: text,
-                display: data.body,
-                time: new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}),
-                wasAI: true,
-                liveVoice: true // flag to stream audio from backend rather than WebSpeechAPI
-            });
-
-            // Deliver notifications & trigger audio
-            deliverTo2GPhone(data.body, true);
-        } catch (err) {
-            log('error', `Backend processing failed: ${err.message}. Falling back to offline logic.`);
-            processWithMockLogic(text);
-        }
-    }
-
-    // ─── LOCAL BROWSER MOCK LOGIC ───
-    function processWithMockLogic(originalText) {
-        log('info', 'Running local browser simulation workflow...');
-
-        let displayText = '';
-        let shouldSpeak = false;
-        let hindiText = '';
-
-        if (state.internetOn && state.aiOn) {
-            // Mock AI Speak Mode
-            const key = originalText.toLowerCase().trim();
-            hindiText = aiTranslations[key] || `दादा जी, विवेक ने संदेश भेजा है: "${originalText}"`;
-            displayText = hindiText;
-            shouldSpeak = true;
-            state.stats.ai++;
-            addChatBubble(`🤖 AI (Mock): ${hindiText}`, 'received');
-        } else if (state.internetOn && !state.aiOn) {
-            // Text fallback
-            displayText = offlineRuleTranslation(originalText);
-            shouldSpeak = false;
-            state.stats.fallback++;
-            addChatBubble(`⚠️ AI Down. Delivered as text: "${displayText}"`, 'received');
-        } else {
-            // Offline silent raw display
-            displayText = originalText;
-            shouldSpeak = false;
-            state.stats.fallback++;
-            addChatBubble(`❌ Offline Fallback. Raw display.`, 'received');
-        }
-
-        state.stats.received++;
-        updateStats();
-
-        state.messages.push({
-            original: originalText,
-            display: displayText,
-            time: new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}),
-            wasAI: shouldSpeak,
-            liveVoice: false
-        });
-
-        deliverTo2GPhone(displayText, shouldSpeak);
-    }
-
-    function offlineRuleTranslation(text) {
-        const lower = text.toLowerCase();
-        for (const [key, translated] of Object.entries(offlineTranslations)) {
-            if (lower.includes(key)) {
-                return `[स्थानीय अनुवाद] ${translated} — ${text}`;
-            }
-        }
-        return text;
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║       DELIVER & NOTIFY 2G PHONE          ║
-    // ╚══════════════════════════════════════════╝
-    function deliverTo2GPhone(displayContent, shouldSpeak) {
-        const phone = document.getElementById('featurePhone');
-        const lcd = document.getElementById('lcdScreen');
-
-        // Shaking & flashing alert
-        phone.classList.add('ringing');
-        setTimeout(() => phone.classList.remove('ringing'), 1500);
-
-        lcd.classList.add('lcd-flash');
-        setTimeout(() => lcd.classList.remove('lcd-flash'), 600);
-
-        state.currentView = 'reading';
-        state.selectedMsg = state.messages.length - 1;
-
-        // Render to LCD
-        showLCDNotification(displayContent, shouldSpeak);
-
-        // Handle Audio
-        if (shouldSpeak) {
-            const currentMsgObj = state.messages[state.selectedMsg];
-            if (currentMsgObj.liveVoice) {
-                setTimeout(() => streamTTSFromBackend(displayContent), 1000);
-            } else {
-                setTimeout(() => speakBrowserTTS(displayContent), 1000);
-            }
-        }
-    }
-
-    function showLCDNotification(text, isAI) {
-        const content = document.getElementById('lcdContent');
-        state.currentView = 'reading';
-
-        content.innerHTML = `
-            <div class="fade-in">
-                <div style="font-size:9px; font-weight:bold; color:#3a4b2a; margin-bottom:3px;">
-                    ${isAI ? '🤖 DadaAI संदेश' : '📩 नया संदेश'}
-                </div>
-                <div style="font-size:8px; color:#6a7b4a; margin-bottom:6px;">
-                    Vivek • ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}
-                </div>
-                <div style="font-size:10px; line-height:1.45; word-break:break-word; max-height:80px; overflow-y:auto;">
-                    ${escapeHtml(text)}
-                </div>
-                ${isAI ? '<div style="font-size:8px; color:#3a6b1a; margin-top:8px;"><i>🔊 बोल रहा है…</i></div>' : '<div style="font-size:8px; color:#8a6b3a; margin-top:8px;">🔇 Silent display</div>'}
-            </div>
-        `;
-
-        document.getElementById('lcdSoftLeft').textContent = 'Reply';
-        document.getElementById('lcdSoftRight').textContent = 'Back';
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║       SPEECH METHODS (TTS)               ║
-    // ╚══════════════════════════════════════════╝
-    
-    // ─── OPTION 1: STREAM VOICE FROM FASTAPI ───
-    async function streamTTSFromBackend(text) {
-        log('info', `POST ${state.backendUrl}/api/v1/voice/tts ...`);
-        stopCurrentAudio();
-
-        // Start speaker animations
-        const waves = document.getElementById('speakerWaves');
-        const aiBtn = document.getElementById('aiVoiceBtn');
-        waves.classList.add('active');
-        aiBtn.classList.add('ai-active');
-
-        try {
-            const response = await fetch(`${state.backendUrl}/api/v1/voice/tts`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: text, language: 'hi' })
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const blob = await response.blob();
-            const audioUrl = URL.createObjectURL(blob);
-            
-            currentAudio = new Audio(audioUrl);
-            currentAudio.onended = () => {
-                waves.classList.remove('active');
-                aiBtn.classList.remove('ai-active');
-                log('success', 'TTS Stream finished playing.');
-                updateLcdSpeechFinished();
-            };
-            currentAudio.onerror = (e) => {
-                waves.classList.remove('active');
-                aiBtn.classList.remove('ai-active');
-                log('error', 'Audio streaming failed.');
-            };
-
-            log('ai', '🔊 Stream received. Playing voice assistant response...');
-            currentAudio.play();
-        } catch (err) {
-            waves.classList.remove('active');
-            aiBtn.classList.remove('ai-active');
-            log('error', `Failed to stream TTS: ${err.message}. Falling back to browser Speech API.`);
-            speakBrowserTTS(text);
-        }
-    }
-
-    // ─── OPTION 2: LOCAL BROWSER VOICE API ───
-    function speakBrowserTTS(text) {
-        if (!('speechSynthesis' in window)) {
-            log('error', 'SpeechSynthesis API not available.');
-            return;
-        }
-
-        stopCurrentAudio();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'hi-IN';
-        utterance.rate = 0.85;
-
-        const voices = window.speechSynthesis.getVoices();
-        const hindiVoice = voices.find(v => v.lang.includes('hi'));
-        if (hindiVoice) utterance.voice = hindiVoice;
-
-        const waves = document.getElementById('speakerWaves');
-        const aiBtn = document.getElementById('aiVoiceBtn');
-        waves.classList.add('active');
-        aiBtn.classList.add('ai-active');
-
-        log('ai', `🔊 Speaking via browser Speech API: "${text.substring(0, 50)}..."`);
-
-        utterance.onend = () => {
-            waves.classList.remove('active');
-            aiBtn.classList.remove('ai-active');
-            log('success', 'Browser TTS finished.');
-            updateLcdSpeechFinished();
-        };
-
-        utterance.onerror = (e) => {
-            waves.classList.remove('active');
-            aiBtn.classList.remove('ai-active');
-            log('error', `Speech synthesis error: ${e.error}`);
-        };
-
-        window.speechSynthesis.speak(utterance);
-    }
-
-    function stopCurrentAudio() {
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
-        }
-        document.getElementById('speakerWaves').classList.remove('active');
-        document.getElementById('aiVoiceBtn').classList.remove('ai-active');
-    }
-
-    function updateLcdSpeechFinished() {
-        const speakEl = document.querySelector('#lcdContent .fade-in div:last-child');
-        if (speakEl && speakEl.innerHTML.includes('बोल रहा है')) {
-            speakEl.innerHTML = '✅ सुनाया गया';
-        }
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║  🎙️ LIVE SPEECH PROCESSING (VOICE AI)    ║
-    // ╚══════════════════════════════════════════╝
-    async function triggerVoiceAI() {
-        // Stop any current audio
-        stopCurrentAudio();
-
-        if (state.apiMode === 'live' && state.backendOnline) {
-            // Live Voice interaction: Record user speech and process
-            if (state.isRecording) {
-                stopRecordingSpeech();
-            } else {
-                startRecordingSpeech();
-            }
-        } else {
-            // Local Mock behavior: speak last message
-            if (state.messages.length === 0) {
-                showLCDMessage('कोई संदेश नहीं', 'No messages to explain.');
-                return;
-            }
-            const lastMsg = state.messages[state.messages.length - 1];
-            log('ai', 'Triggered explanation read-out (Mock Mode)');
-            showLCDNotification(lastMsg.display, true);
-            speakBrowserTTS(lastMsg.display);
-        }
-    }
-
-    async function startRecordingSpeech() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            state.mediaRecorder = new MediaRecorder(stream);
-            state.audioChunks = [];
-
-            state.mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) state.audioChunks.push(event.data);
-            };
-
-            state.mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
-                log('info', `Audio file recorded (${Math.round(audioBlob.size / 1024)} KB). Uploading to backend...`);
-                uploadVoiceToBackend(audioBlob);
-            };
-
-            state.mediaRecorder.start();
-            state.isRecording = true;
-
-            // Update button
-            document.getElementById('voiceBtnText').innerHTML = '<i class="fas fa-stop text-red-500 mr-1"></i> STOP MIC';
-            document.getElementById('aiVoiceBtn').classList.add('ai-active');
-
-            // Update LCD to show recording
-            const content = document.getElementById('lcdContent');
-            content.innerHTML = `
-                <div style="text-align:center; padding-top:25px;" class="fade-in">
-                    <div style="font-size:24px;" class="recording-icon"><i class="fas fa-microphone"></i></div>
-                    <div style="font-size:12px; font-weight:bold; margin-top:10px;">बोलिए दादा जी...</div>
-                    <div style="font-size:8px; color:#5a6b3a; margin-top:4px;">(Click button again to stop)</div>
-                </div>
-            `;
-            log('info', 'Recording started. Speak into your microphone...');
-        } catch (err) {
-            log('error', `Microphone access error: ${err.message}`);
-            showLCDMessage('🎤 Error', 'No microphone access.');
-        }
-    }
-
-    function stopRecordingSpeech() {
-        if (state.mediaRecorder && state.isRecording) {
-            state.mediaRecorder.stop();
-            state.isRecording = false;
-            document.getElementById('voiceBtnText').textContent = 'VOICE AI';
-            document.getElementById('aiVoiceBtn').classList.remove('ai-active');
-            
-            showLCDMessage('⏳ Processing...', 'AI thinking & speaking...');
-        }
-    }
-
-    async function uploadVoiceToBackend(audioBlob) {
-        const formData = new FormData();
-        formData.append('phone_number', state.phoneNum);
-        formData.append('audio', audioBlob, 'voice.webm');
-        formData.append('language', 'hi');
-
-        log('info', `POST ${state.backendUrl}/api/v1/voice/process ...`);
-        
-        // Setup speaker waves indicating backend is working
-        const waves = document.getElementById('speakerWaves');
-        const aiBtn = document.getElementById('aiVoiceBtn');
-        waves.classList.add('active');
-        aiBtn.classList.add('ai-active');
-
-        try {
-            const response = await fetch(`${state.backendUrl}/api/v1/voice/process`, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            // The backend returns binary streaming audio. Play it directly.
-            const respBlob = await response.blob();
-            const audioUrl = URL.createObjectURL(respBlob);
-            
-            currentAudio = new Audio(audioUrl);
-            currentAudio.onended = () => {
-                waves.classList.remove('active');
-                aiBtn.classList.remove('ai-active');
-                log('success', 'Voice process audio stream finished playing.');
-            };
-            currentAudio.onerror = () => {
-                waves.classList.remove('active');
-                aiBtn.classList.remove('ai-active');
-                log('error', 'Failed to play response audio stream.');
-            };
-
-            // Update LCD to show completion
-            const content = document.getElementById('lcdContent');
-            content.innerHTML = `
-                <div style="text-align:center; padding-top:20px;" class="fade-in">
-                    <div style="font-size:24px; color:#22c55e;"><i class="fas fa-check-circle"></i></div>
-                    <div style="font-size:12px; font-weight:bold; margin-top:8px;">AI Responded</div>
-                    <div style="font-size:8px; color:#5a6b3a; margin-top:4px;">🔊 Listen to response...</div>
-                </div>
-            `;
-
-            log('ai', '🔊 Response stream received. Playing to Dada Ji...');
-            currentAudio.play();
-
-            // Fetch the updated history from API to show the message text on LCD
-            setTimeout(fetchConversationHistory, 1500);
-
-        } catch (err) {
-            waves.classList.remove('active');
-            aiBtn.classList.remove('ai-active');
-            log('error', `Voice processing request failed: ${err.message}`);
-            showLCDMessage('❌ Failed', 'API Processing Error');
-            setTimeout(showHome, 2000);
-        }
-    }
-
-    async function fetchConversationHistory() {
-        if (state.apiMode !== 'live' || !state.backendOnline) return;
-        
-        try {
-            const res = await fetch(`${state.backendUrl}/api/v1/sms/history/${state.phoneNum}?limit=5`);
-            if (res.ok) {
-                const data = await res.json();
-                if (data.messages && data.messages.length > 0) {
-                    // Update local messages array
-                    state.messages = [];
-                    // reverse the history list to chronological
-                    const sorted = data.messages.slice().reverse();
-                    sorted.forEach(m => {
-                        state.messages.push({
-                            original: m.content,
-                            display: m.content,
-                            time: new Date(m.timestamp).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}),
-                            wasAI: m.role === 'assistant',
-                            liveVoice: true
-                        });
-                    });
-
-                    log('info', `Fetched updated conversation history. Syncing messages.`);
-                    // Show reading display for the last assistant response
-                    const latestAssistantIdx = state.messages.map(m=>m.wasAI).lastIndexOf(true);
-                    if (latestAssistantIdx !== -1) {
-                        state.selectedMsg = latestAssistantIdx;
-                        showLCDNotification(state.messages[latestAssistantIdx].display, true);
-                        updateLcdSpeechFinished();
-                    } else {
-                        showHome();
-                    }
-                }
-            }
-        } catch (err) {
-            log('error', `Failed to sync database conversation history: ${err.message}`);
-        }
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║       NAV & KEYPAD INTERACTION           ║
-    // ╚══════════════════════════════════════════╝
-    function showInbox() {
-        state.currentView = 'inbox';
-        const content = document.getElementById('lcdContent');
-
-        if (state.messages.length === 0) {
-            content.innerHTML = `
-                <div style="text-align:center; padding-top:35px;">
-                    <div style="font-size:9px; color:#7a8b5a;">कोई संदेश नहीं</div>
-                </div>
-            `;
-            return;
-        }
-
-        let html = `<div style="font-size:9px; font-weight:bold; color:#3a4b2a; margin-bottom:4px;">📬 इनबॉक्स (${state.messages.length})</div>`;
-        const start = Math.max(0, state.messages.length - 4);
-        for (let i = state.messages.length - 1; i >= start; i--) {
-            const m = state.messages[i];
-            const selected = i === state.selectedMsg;
-            html += `<div style="padding:2px 0; font-size:9px; ${selected ? 'background:#a0b878; color:#1a2b0a; padding:2px 4px; border-radius:2px;' : ''}cursor:pointer;" onclick="readMsg(${i})">
-                ${m.wasAI ? '🤖' : '📩'} ${m.time} — ${escapeHtml(m.original.substring(0,22))}${m.original.length > 22 ? '…' : ''}
-            </div>`;
-        }
-        content.innerHTML = html;
-        document.getElementById('lcdSoftLeft').textContent = 'Open';
-        document.getElementById('lcdSoftRight').textContent = 'Back';
-    }
-
-    function readMsg(idx) {
-        if (idx < 0 || idx >= state.messages.length) return;
-        state.selectedMsg = idx;
-        state.currentView = 'reading';
-        const m = state.messages[idx];
-        showLCDNotification(m.display, m.wasAI);
-    }
-
-    function showHome() {
-        state.currentView = 'home';
-        const content = document.getElementById('lcdContent');
-        const unread = state.messages.length;
-        content.innerHTML = `
-            <div style="text-align:center; padding-top:20px;">
-                <div style="font-size:22px;">🙏</div>
-                <div style="font-size:13px; font-weight:bold; margin-top:6px;">नमस्ते दादा जी</div>
-                <div style="font-size:9px; margin-top:4px; color:#5a6b3a;">DadaAI Ready</div>
-                <div style="font-size:8px; margin-top:12px; color:#7a8b5a;">
-                    ${unread > 0 ? '📬 ' + unread + ' संदेश' : 'कोई नया संदेश नहीं'}
-                </div>
-            </div>
-        `;
-        document.getElementById('lcdSoftLeft').textContent = 'Menu';
-        document.getElementById('lcdSoftRight').textContent = 'Contacts';
-    }
-
-    function keyPress(key) {
-        log('info', `⌨️ Physical key pressed: ${key}`);
-
-        // Quick responses via keypad during reading view
-        if (state.currentView === 'reading') {
-            const quickReplies = {
-                '1': 'ठीक है',
-                '2': 'हाँ',
-                '3': 'नहीं',
-                '4': 'कॉल करो',
-                '5': 'बाद में',
-            };
-            if (quickReplies[key]) {
-                const text = quickReplies[key];
-                log('success', `📤 SMS Quick-Reply sent: "${text}"`);
-                addChatBubble(`↩️ Dada Ji: ${text}`, 'received');
-                
-                // If Live Mode, we could make an API call to save reply, but for prototype display suffice
-                showLCDMessage('✅ भेजा गया', text);
-                setTimeout(showHome, 1500);
-            }
-        }
-    }
-
-    // Nav disc events
-    function navAction(dir) {
-        if (dir === 'select') {
-            if (state.currentView === 'home') {
-                showInbox();
-            } else if (state.currentView === 'inbox') {
-                readMsg(state.selectedMsg);
-            }
-        } else if (dir === 'up') {
-            if (state.currentView === 'inbox' && state.selectedMsg > 0) {
-                state.selectedMsg--;
-                showInbox();
-            }
-        } else if (dir === 'down') {
-            if (state.currentView === 'inbox' && state.selectedMsg < state.messages.length - 1) {
-                state.selectedMsg++;
-                showInbox();
-            }
-        }
-    }
-
-    // Softkey events
-    function softKey(side) {
-        if (side === 'left') {
-            if (state.currentView === 'home') showInbox();
-            else if (state.currentView === 'reading') {
-                showLCDMessage('जवाब दें', '1=ठीक 2=हाँ 3=नहीं 4=कॉल 5=बाद में');
-            }
-        } else {
-            if (state.currentView === 'reading') showInbox();
-            else if (state.currentView === 'inbox') showHome();
-        }
-    }
-
-    // Call/End keys
-    function callAction(type) {
-        if (type === 'call') {
-            log('info', '📞 Call button pressed.');
-            if (state.messages.length > 0) {
-                triggerVoiceAI();
-            } else {
-                showLCDMessage('📞 डायल करें', 'नंबर दर्ज करें');
-            }
-        } else {
-            // End / Reset view
-            showHome();
-            stopCurrentAudio();
-        }
-    }
-
-    // escape helper
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 
     function updateStats() {
-        document.getElementById('statSent').textContent = state.stats.sent;
-        document.getElementById('statReceived').textContent = state.stats.received;
-        document.getElementById('statAI').textContent = state.stats.ai;
-        document.getElementById('statFallback').textContent = state.stats.fallback;
+        document.getElementById('statSent').textContent = controlState.stats.sent;
+        document.getElementById('statReceived').textContent = controlState.stats.received;
+        document.getElementById('statAI').textContent = controlState.stats.ai;
+        document.getElementById('statFallback').textContent = controlState.stats.fallback;
     }
 
-    // Background decoration
-    function createParticles() {
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            const span = document.createElement('span');
-            span.style.left = Math.random() * 100 + '%';
-            span.style.animationDuration = (8 + Math.random() * 15) + 's';
-            span.style.animationDelay = Math.random() * 10 + 's';
-            span.style.width = span.style.height = (3 + Math.random() * 5) + 'px';
-            container.appendChild(span);
+    // Periodic health polling
+    setInterval(checkBackendHealth, 15000);
+
+    // Particles
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const s = document.createElement('span');
+            s.style.left = Math.random() * 100 + '%';
+            s.style.animationDuration = (8 + Math.random() * 15) + 's';
+            s.style.animationDelay = Math.random() * 10 + 's';
+            s.style.width = s.style.height = (3 + Math.random() * 5) + 'px';
+            c.appendChild(s);
         }
-    }
-    createParticles();
+    })();
+
+    // Init mode from localStorage
+    (function() {
+        const saved = localStorage.getItem('dadaai_api_mode');
+        if (saved) {
+            document.getElementById('apiMode').value = saved;
+            changeApiMode();
+        }
+        const savedUrl = localStorage.getItem('dadaai_backend_url');
+        if (savedUrl) document.getElementById('apiUrl').value = savedUrl;
+
+        const savedQ = localStorage.getItem('dadaai_connection_quality');
+        if (savedQ) {
+            document.getElementById('connectionQuality').value = savedQ;
+            controlState.connectionQuality = savedQ;
+            updateModeIndicator();
+        }
+    })();
     </script>
 </body>
 </html>
