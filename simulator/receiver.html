@@ -802,7 +802,7 @@
         // STEP 2: Check if it's a local device command
         const localResult = handleLocalCommand(transcribedText);
 
-        if (localResult) {
+        if (localResult && settings.mode !== 'live') {
             // This is a local command (battery, time, message count, repeat)
             broadcastLog('ai', `Local command detected: "${transcribedText}" → "${localResult.text}"`);
             respondToQuery(localResult.text);

@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+    --nokia-body: #2c2c34;
+    --nokia-btn: #3a3a44;
+    --lcd-bg: #b8c99a;
+    --lcd-text: #2a3b1a;
+    --lcd-glow: rgba(184,201,154,0.35);
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(160deg, #1a0a2e, #2d1b4e, #1a0a2e);
+    min-height: 100vh;
+    color: #e2e8f0;
+    margin: 0;
+}
+.feature-phone {
+    width: 260px;
+    background: linear-gradient(160deg, #3c3c4c, var(--nokia-body), #22222a);
+    border-radius: 24px 24px 30px 30px;
+    padding: 20px 16px 16px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 50px rgba(168,85,247,0.15);
+    border: 1px solid rgba(168,85,247,0.15);
+    position: relative;
+    margin: 0 auto;
+}
+.feature-phone::before {
+    content: 'DadaAI'; position: absolute; top: 7px; left: 50%;
+    transform: translateX(-50%); font-size: 8px; font-weight: 700;
+    letter-spacing: 2.5px; color: rgba(168,85,247,0.5); text-transform: uppercase;
+}
+.lcd-screen {
+    background: var(--lcd-bg);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--lcd-text);
+    font-size: 11px;
+    line-height: 1.4;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.25), 0 0 18px var(--lcd-glow);
+}
+.lcd-header {
+    border-bottom: 1px solid rgba(42,59,26,0.3);
+}
+.keypad { margin-top: 10px; }
+.num-key {
+    background: linear-gradient(180deg, #4a4a58, var(--nokia-btn));
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #d4d4dc;
+    font-weight: 600;
+    font-size: 14px;
+}
+.num-key:active { background: linear-gradient(180deg, var(--nokia-btn), #2a2a34); transform: scale(0.95); }
+.nav-btn {
+    background: linear-gradient(180deg, #555568, #44445a);
+}
+.nav-btn:active { transform: scale(0.95); }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}

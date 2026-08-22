@@ -35,7 +35,7 @@ async def _elevenlabs_tts(text: str, voice_id: str, settings) -> bytes:
     client = AsyncElevenLabs(api_key=settings.elevenlabs_api_key)
     vid = voice_id or "JBFqnCBsd6RMkjVDRZzb"  # Default voice
     
-    audio_stream = await client.text_to_speech.convert(
+    audio_stream = client.text_to_speech.convert(
         voice_id=vid,
         text=text,
         model_id="eleven_multilingual_v2",
