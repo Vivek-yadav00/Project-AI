@@ -14,12 +14,13 @@ async def process_sms(phone_number: str, text: str, db: Session) -> str:
     if not conversation:
         conversation = crud.create_conversation(db, user_id=user.id, channel=ChannelType.SMS)
         
+    # Get conversation history BEFORE adding the new message
+    history_messages = crud.get_conversation_history(db, conversation_id=conversation.id, limit=10)
+    history_messages.reverse() # Fix chronological order
+    history = [{"role": msg.role, "content": msg.content} for msg in history_messages if msg.role != MessageRole.SYSTEM]
+    
     # Add user message
     crud.add_message(db, conversation_id=conversation.id, role=MessageRole.USER, content=text, audio_url=None)
-    
-    # Get conversation history
-    history_messages = crud.get_conversation_history(db, conversation_id=conversation.id, limit=10)
-    history = [{"role": msg.role, "content": msg.content} for msg in history_messages if msg.role != MessageRole.SYSTEM]
     
     # Get LLM response
     response_text = await get_ai_response(
@@ -41,19 +42,33 @@ async def process_voice(phone_number: str, audio_data: bytes, language: str, db:
         
     # 2. Process as SMS (LLM interaction)
     user = crud.get_or_create_user(db, phone_number=phone_number)
+    
+    # Get recent SMS context so Voice AI knows what messages arrived
+    sms_conv = crud.get_active_conversation(db, user_id=user.id, channel=ChannelType.SMS)
+    sms_context = ""
+    if sms_conv:
+        recent_sms = crud.get_conversation_history(db, conversation_id=sms_conv.id, limit=3)
+        if recent_sms:
+            sms_context = "Recent SMS interaction:\n"
+            for msg in reversed(recent_sms):
+                sms_context += f"- {msg.role}: {msg.content}\n"
+                
     conversation = crud.get_active_conversation(db, user_id=user.id, channel=ChannelType.VOICE)
     if not conversation:
         conversation = crud.create_conversation(db, user_id=user.id, channel=ChannelType.VOICE)
         
-    crud.add_message(db, conversation_id=conversation.id, role=MessageRole.USER, content=transcribed_text, audio_url=None)
-    
+    # Get conversation history BEFORE adding the new message
     history_messages = crud.get_conversation_history(db, conversation_id=conversation.id, limit=10)
+    history_messages.reverse() # Fix chronological order
     history = [{"role": msg.role, "content": msg.content} for msg in history_messages if msg.role != MessageRole.SYSTEM]
+    
+    crud.add_message(db, conversation_id=conversation.id, role=MessageRole.USER, content=transcribed_text, audio_url=None)
     
     response_text = await get_ai_response(
         prompt=transcribed_text,
         conversation_history=history,
-        language=language
+        language=language,
+        context=sms_context
     )
     
     crud.add_message(db, conversation_id=conversation.id, role=MessageRole.ASSISTANT, content=response_text, audio_url=None)

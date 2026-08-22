@@ -10,7 +10,7 @@ async def speech_to_text(audio_data: bytes, language: str = "hi", provider: str 
     """Transcribe audio to text using Google Gemini."""
     settings = get_settings()
     
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_file:
         temp_file.write(audio_data)
         temp_path = temp_file.name
         
